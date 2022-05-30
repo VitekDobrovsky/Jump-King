@@ -17,6 +17,7 @@ class Level:
         self.world_shift = 0
 
         self.current_x = 0
+
     def create_map(self):
 
         for row_index,row in enumerate(level_map):
@@ -55,14 +56,21 @@ class Level:
 
         for sprite in self.obstacle.sprites():
             if player.rect.colliderect(sprite.rect):
+
                 if player.direction.x > 0:
                     player.rect.right = sprite.rect.left
                     player.on_right = True
+                    self.current_x = player.rect.right
+
                 elif player.direction.x < 0:
                     player.rect.left = sprite.rect.right
                     player.on_left = True
+                    self.current_x = player.rect.left
 
-
+        if player.on_left and (player.rect.left < self.current_x or player.direction.x >= 0):
+            player.on_left = False
+        if player.on_right and (player.rect.right < self.current_x or player.direction.x <= 0):
+            player.on_right = False
 
     def vertical_move_collision(self):
         player = self.player.sprite
